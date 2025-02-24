@@ -47,8 +47,8 @@
         ],
         "post-install-cmd": [
             "php artisan clear-compiled",
-            "chmod -R 775 storage bootstrap/cache",
-            "chmod -R 775 public/"
+            "chmod -R 777 storage bootstrap/cache",
+            "chmod -R 777 public/"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
