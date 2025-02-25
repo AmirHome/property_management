@@ -21,9 +21,6 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             // password_confirmation
 
-            // Feature Values
-            'feature_values' => ['string', 'nullable'],
-
             // User Profile
             'mobile' => ['string', 'nullable'],
             'first_name' => ['string', 'nullable'],
