@@ -17,10 +17,11 @@ use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements HasMedia
 {
-    use SoftDeletes, Notifiable, InteractsWithMedia, Auditable, HasFactory;
+    use SoftDeletes, Notifiable, InteractsWithMedia, Auditable, HasFactory, HasApiTokens;
 
     public $table = 'users';
 
