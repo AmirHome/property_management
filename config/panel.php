@@ -9,6 +9,7 @@ return [
         'tr' => 'Turkish',
         'fa' => 'Persian',
     ],
-    'registration_default_role' => '2',
+    'administrator_role' => 1,
+    'registration_default_role' => 2, // Building Manager
 
 ];

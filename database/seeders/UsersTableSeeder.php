@@ -46,5 +46,13 @@ class UsersTableSeeder extends Seeder
         ];
 
         User::insert($users);
+
+        // Create Team for user
+        $team = \App\Models\Team::create([
+            'owner_id' => 2,
+            'name'     => 'Building Manager Test',
+        ]);
+        User::find(2)->update(['team_id' => $team->id]);
+        User::find(4)->update(['team_id' => $team->id]);
     }
 }

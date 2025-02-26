@@ -16,12 +16,33 @@ class UsersApiController extends Controller
 {
     use MediaUploadingTrait;
 
-    public function index()
-    {
-        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new UserResource(User::with(['roles', 'team'])->get());
+    public function index(Request $request)
+    {
+        // abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $user = $request->user();
+
+        if ($user->roles->contains('id', 1)) { // Check if the user has the 'Admin' role (role ID 1)
+            $users = User::with(['roles', 'team'])->get();
+        } else {
+            // Check if the current user is the owner of the team
+            $team = $user->team;
+            if ($team && $team->owner_id === $user->id) {
+                    $users = User::where('team_id', $team->id)->with(['roles', 'team'])->get();
+            }
+            else{
+                //show only current user info
+                $users = User::where('id', $user->id)->with(['roles', 'team'])->get();
+            }
+        }
+
+        return new UserResource($users);
     }
+    
+
+    //     return new UserResource(User::with(['roles', 'team'])->get());
+
 
     public function store(StoreUserRequest $request)
     {
