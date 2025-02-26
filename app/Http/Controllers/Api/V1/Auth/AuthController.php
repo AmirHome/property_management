@@ -30,8 +30,6 @@ class AuthController extends Controller
             return response()->json( [ 'errors' => $validator->errors() ], 400 );
         }
 
-       //$user =  [ 'errors' => 'Can not register!' ];
-
         DB::beginTransaction();
 
         try {
@@ -41,9 +39,9 @@ class AuthController extends Controller
                 'team_id'  => request()->input('team', null),
             ]);
 
-            $user->roles()->attach(3); // Simple user role
+            $user->roles()->attach(config('panel.registration_default_role')); // Simple user role
 
-            $user->profile()->create( $request->all());
+            // $user->profile()->create( $request->all());
 
             if (!request()->has('team')) {
                 $team = \App\Models\Team::create([
@@ -54,19 +52,6 @@ class AuthController extends Controller
                 $user->update(['team_id' => $team->id]);
             }
 
-            $featureValues = array_filter(explode(',', $request->feature_values ?? ''));
-            if(!empty($featureValues)) {
-                $company = Company::create([
-                    'name'     => '',
-                    'phone'     => '',
-                    'address'     => '',
-                    'email'     => '',
-                ]);
-
-                $company->feature_values()->sync($featureValues);
-
-                $user->companies()->sync([$company->id]);
-            }
            //if(!empty($request->input('feature_values', ''))) {
            //    $company->feature_values()->sync(explode(',', $request->input('feature_values', '')));
            //}

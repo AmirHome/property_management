@@ -4,6 +4,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Auth', 'm
 
 
     Route::post('login', 'AuthController@login');
+    Route::post('register', 'AuthController@register');
+    // Route::get('user', 'AuthController@user');
 });
 
 Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', 'middleware' => ['auth:sanctum']], function () {
