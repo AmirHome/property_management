@@ -1,93 +1,67 @@
 <?php
 
-Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Auth', 'middleware' => ['api']], function () {
+use Illuminate\Support\Facades\Route;
 
+Route::group(['prefix' => 'v1', 'as' => 'api.', 'middleware' => ['api']], function () {
+    Route::post('login', 'Api\V1\Auth\AuthController@login')->name('login');
+    Route::post('register', 'Api\V1\Auth\AuthController@register')->name('register');
+    
+    
+    // Admin routes (protected by sanctum)
+    Route::group(['namespace' => 'Api\V1\Admin', 'middleware' => ['auth:sanctum']], function () {
+        // Roles
+        Route::apiResource('roles', 'RolesApiController');
 
-    Route::post('login', 'AuthController@login');
-    Route::post('register', 'AuthController@register');
-    // Route::get('user', 'AuthController@user');
-});
+        // Users
+        Route::post('users/media', 'UsersApiController@storeMedia')->name('users.storeMedia');
+        Route::apiResource('users', 'UsersApiController');
 
-Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', 'middleware' => ['auth:sanctum']], function () {
+        // Countries
+        Route::apiResource('countries', 'CountriesApiController');
 
-    // Roles
-    Route::apiResource('roles', 'RolesApiController');
+        // Province
+        Route::apiResource('provinces', 'ProvinceApiController');
 
-    // Users
-    Route::post('users/media', 'UsersApiController@storeMedia')->name('users.storeMedia');
-    Route::apiResource('users', 'UsersApiController');
+        // User Alerts
+        Route::apiResource('user-alerts', 'UserAlertsApiController', ['except' => ['update']]);
 
-    // Countries
-    Route::apiResource('countries', 'CountriesApiController');
+        // CRM
+        Route::apiResource('crm-statuses', 'CrmStatusApiController');
+        Route::apiResource('crm-customers', 'CrmCustomerApiController');
+        Route::apiResource('crm-notes', 'CrmNoteApiController');
+        Route::post('crm-documents/media', 'CrmDocumentApiController@storeMedia')->name('crm-documents.storeMedia');
+        Route::apiResource('crm-documents', 'CrmDocumentApiController');
 
-    // Province
-    Route::apiResource('provinces', 'ProvinceApiController');
+        // FAQ
+        Route::apiResource('faq-categories', 'FaqCategoryApiController');
+        Route::post('faq-questions/media', 'FaqQuestionApiController@storeMedia')->name('faq-questions.storeMedia');
+        Route::apiResource('faq-questions', 'FaqQuestionApiController');
 
-    // User Alerts
-    Route::apiResource('user-alerts', 'UserAlertsApiController', ['except' => ['update']]);
+        // Tasks
+        Route::apiResource('task-statuses', 'TaskStatusApiController');
+        Route::apiResource('task-tags', 'TaskTagApiController');
+        Route::post('tasks/media', 'TaskApiController@storeMedia')->name('tasks.storeMedia');
+        Route::apiResource('tasks', 'TaskApiController');
 
-    // Crm Status
-    Route::apiResource('crm-statuses', 'CrmStatusApiController');
+        // Settings
+        Route::apiResource('settings', 'SettingsApiController', ['except' => ['store', 'show', 'destroy']]);
 
-    // Crm Customer
-    Route::apiResource('crm-customers', 'CrmCustomerApiController');
+        // Content Management
+        Route::apiResource('content-categories', 'ContentCategoryApiController');
+        Route::apiResource('content-tags', 'ContentTagApiController');
+        Route::post('content-pages/media', 'ContentPageApiController@storeMedia')->name('content-pages.storeMedia');
+        Route::apiResource('content-pages', 'ContentPageApiController');
 
-    // Crm Note
-    Route::apiResource('crm-notes', 'CrmNoteApiController');
+        // Teams
+        Route::apiResource('teams', 'TeamApiController');
 
-    // Crm Document
-    Route::post('crm-documents/media', 'CrmDocumentApiController@storeMedia')->name('crm-documents.storeMedia');
-    Route::apiResource('crm-documents', 'CrmDocumentApiController');
-
-    // Faq Category
-    Route::apiResource('faq-categories', 'FaqCategoryApiController');
-
-    // Faq Question
-    Route::post('faq-questions/media', 'FaqQuestionApiController@storeMedia')->name('faq-questions.storeMedia');
-    Route::apiResource('faq-questions', 'FaqQuestionApiController');
-
-    // Task Status
-    Route::apiResource('task-statuses', 'TaskStatusApiController');
-
-    // Task Tag
-    Route::apiResource('task-tags', 'TaskTagApiController');
-
-    // Task
-    Route::post('tasks/media', 'TaskApiController@storeMedia')->name('tasks.storeMedia');
-    Route::apiResource('tasks', 'TaskApiController');
-
-    // Settings
-    Route::apiResource('settings', 'SettingsApiController', ['except' => ['store', 'show', 'destroy']]);
-
-    // Content Category
-    Route::apiResource('content-categories', 'ContentCategoryApiController');
-
-    // Content Tag
-    Route::apiResource('content-tags', 'ContentTagApiController');
-
-    // Content Page
-    Route::post('content-pages/media', 'ContentPageApiController@storeMedia')->name('content-pages.storeMedia');
-    Route::apiResource('content-pages', 'ContentPageApiController');
-
-    // Team
-    Route::apiResource('teams', 'TeamApiController');
-
-    // Buildings
-    Route::apiResource('buildings', 'BuildingsApiController');
-
-    // Units
-    Route::apiResource('units', 'UnitsApiController');
-
-    // Contracts
-    Route::post('contracts/media', 'ContractsApiController@storeMedia')->name('contracts.storeMedia');
-    Route::apiResource('contracts', 'ContractsApiController');
-
-    // Maintenance Requests
-    Route::apiResource('maintenance-requests', 'MaintenanceRequestsApiController');
-
-    // Amenities
-    Route::apiResource('amenities', 'AmenitiesApiController');
-
-    // Amenity Reservations
-    Route::apiResource('amenity-reservations', 'AmenityReservationsApiController');
+        // Property Management
+        Route::apiResource('buildings', 'BuildingsApiController');
+        Route::apiResource('units', 'UnitsApiController');
+        Route::post('contracts/media', 'ContractsApiController@storeMedia')->name('contracts.storeMedia');
+        Route::apiResource('contracts', 'ContractsApiController');
+        Route::apiResource('maintenance-requests', 'MaintenanceRequestsApiController');
+        Route::apiResource('amenities', 'AmenitiesApiController');
+        Route::apiResource('amenity-reservations', 'AmenityReservationsApiController');
+    });
 });

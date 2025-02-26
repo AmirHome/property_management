@@ -39,7 +39,7 @@ class AuthController extends Controller
                 'team_id'  => request()->input('team', null),
             ]);
 
-            $user->roles()->attach(config('panel.registration_default_role')); // Simple user role
+            $user->roles()->sync(config('panel.registration_default_role')); // Simple user role
 
             // $user->profile()->create( $request->all());
 
@@ -63,11 +63,9 @@ class AuthController extends Controller
             return response()->json( [ 'errors' => $e->getMessage() ], 400 );
         }
 
-
-
-
         return response()->json($user);
     }
+
 
     public function login(Request $request)
     {
