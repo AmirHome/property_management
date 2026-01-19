@@ -67,7 +67,17 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 
 ### Run Laravel in WSL
+WindowsShell:  
+wsl --shutdown
 wsl -d Ubuntu-22.04 -u econtech
 
-cd ~/property_management
 
+LinuxShell:
+cd ~/property_management
+hostname -I
+
+docker-compose exec app php artisan migrate:fresh --seed
+
+docker-compose down -v
+docker-compose up -d
+docker-compose ps
