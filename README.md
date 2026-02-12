@@ -67,12 +67,34 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 
 ### Run Laravel in WSL
-WindowsShell:  
+
+#### WindowsShell:
+```powershell
 wsl --shutdown
 wsl -d Ubuntu-22.04 -u econtech
+```
+
+#### Auto-start WSL shell at logon (OpenWSL_Econtech)
+You can make Windows open a WSL shell as the `econtech` user automatically when you log on. This only runs the single command `wsl -d Ubuntu-22.04 -u econtech` and opens a visible terminal window.
+
+Open PowerShell as Administrator and run the following commands:
+
+```powershell
+schtasks /Create /SC ONSTART /TN "OpenWSL_Econtech" /TR "C:\Windows\System32\wsl.exe -d Ubuntu-22.04 -u econtech" /RU "econadmin" /RP "YourWindowsPassword" /F
+schtasks /Run /TN "OpenWSL_Econtech"
+```
+
+To remove the task:
+
+```powershell
+schtasks /Query /TN "OpenWSL_Econtech" /V
+
+schtasks /Delete /TN "OpenWSL_Econtech" /F
+```
 
 
 LinuxShell:
+```wsl -d Ubuntu-22.04 -u econtech
 cd ~/property_management
 hostname -I
 
@@ -81,3 +103,4 @@ docker-compose exec app php artisan migrate:fresh --seed
 docker-compose down -v
 docker-compose up -d
 docker-compose ps
+```
